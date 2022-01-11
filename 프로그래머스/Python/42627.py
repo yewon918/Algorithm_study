@@ -26,39 +26,30 @@ answer = jobs[0][1]
 
 '''
 
-import sys
 import heapq
+import sys
+
 
 def solution(jobs):
     answer = 0
-    h = []
-    curr = sys.maxsize
-    # sys.maxsize - 플랫폼의 포인터 사이즈 리턴 : 시스템이 지정할 수 있는 최댓값과 최솟값을 알 수 있음
-    temp = []
-    for j in jobs:
-        heapq.heappush(h, (j[1], j[0]))     # 도착, 처리를 순서 바꿔서 넣음 - h(처리, 도착)
-        if j[0] < curr:
-            curr = j[0]                     # curr - 힙의 min값: 가장 짧은 소요시간
-
-    while h:
-        while h and curr < h[0][1]:                   # 도착시간이 curr보다 큰 경우
-            time, arrived = heapq.heappop(h)
-            heapq.heappush(temp, (time, arrived))     # 처리 시간을 앞에 두면 minheap에서 시간이 동일할때 처리시간이 같은걸 찾게됨
-
-        if not h:    # 힙이 비었을 경우
-            curr += 1
+    i = 0
+    start = -1
+    now = 0
+    heap = []
+    while i < len(jobs):
+        for j in jobs:      # 도착, 소요
+            if start < j[0] <= now:
+                heapq.heappush(heap,(j[1], j[0]))
+        if len(heap)>0:
+            curr = heapq.heappop(heap)  # 소요, 도착
+            start = now
+            now += curr[0]
+            answer += now - curr[1]     # 걸린시간 - 처음 도착시간
+            i += 1
         else:
-            time, arrived = heapq.heappop(h)
-            curr += time
-            answer += (curr - arrived)
+            now += 1
 
-        while temp:         # 소요시간이 짧은 요소를 찾기 위해 임시로 빼둔 temp를 h에 넣음
-            t = heapq.heappop(temp)
-            heapq.heappush(h, t)       # 처리시간 짧은 순서대로 h에 다시 넣음
-
-    return (answer // len(jobs))
-
-
+    return answer//len(jobs)
 
 
 print(solution(jobs=[[0, 3], [1, 9], [2, 6]]))
