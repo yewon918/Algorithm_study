@@ -1,18 +1,20 @@
+# kruskal 알고리즘 - MST 사용, 최소의 비용으로 사이클을 형성하지 않음
+
 def solution(n, costs):
     answer = 0
-    costs.sort(key=lambda x: x[2])  # 비용기준으로 오름차순 정렬
-    connect = set([costs[0][0]])   # 연결을 확인하는 집합
-    #connect = {[costs[0][0]]}
+    costs.sort(key=lambda x: x[2])  # kruskal1 - 오름차순 정렬
+    # costs 내부 원소들을 기준으로 sorting 할건데 그 내부의 2번째 원소 기준으로
 
-    # Kruskal 알고리즘으로 최소 비용 구하기
-    while len(connect) != n:
-        for cost in costs:
-            if cost[0] in connect and cost[1] in connect:
+    candi = set([costs[0][0]])      # 주의!
+
+    while len(candi) != n:          # kruskal2 - 사이클 형성하지 않으면서 연결
+        for i in costs:
+            if i[0] in candi and i[1] in candi:
                 continue
-            if cost[0] in connect or cost[1] in connect:
-                connect.update([cost[0], cost[1]])
-                answer += cost[2]
-                break
+            if i[0] in candi or i[1] in candi:
+                candi.update([i[0], i[1]])      # 주의!!
+                answer += i[2]
+                break       # candi 수 안넘는거 확인해야함
 
     return answer
 
