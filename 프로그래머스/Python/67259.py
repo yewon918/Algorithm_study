@@ -17,32 +17,43 @@
 (n-1,n-1) 위치라면 정지, 비용리스트에 넣기
 '''
 from collections import deque
-
-dx, dy = [-1, 1, 0, 0], [0, 0, -1, 1]
-
 def solution(board):
-    answer = 0
-    N = len(board)
-    start, end = (0, 0), (N - 1, N - 1)
-    costs = [[float('inf')] * N for _ in range(N)]
-    # inf - 양의 무한대
+    dx = [-1, 1, 0, 0]
+    dy = [0, 0, -1, 1]
+    N = len(board[0])
 
-    deq = deque()
-    deq.append((0, 0, 0, 1))    # 좌
-    deq.append((0, 0, 0, 3))    # 상
-    costs[0][0] = 0     # 현재 비용: 0원
+    answer = float('inf')
+    deq = deque([])
+    cost = [[[float('inf') for y in range(len(board))] for x in range(len(board))] for z in range(4)]
+
+    for z in range(4):      # 방향을 추가해줌
+        cost[z][0][0] = 0
+
+    if board[1][0] != 1:    # x
+        deq.append([1, 0, 100, 1])
+        cost[1][1][0] = 100
+
+    if board[0][1] != 1:    # y
+        deq.append([0, 1, 100, 3])
+        cost[3][0][1] = 100
+
     while deq:
-        x, y, cost, dir = deq.popleft()     # 좌표, 비용, 방향
-        for k in range(4):      # 상하좌우 하나씩 좌표를 움직임
-            nx = x + dx[k]
-            ny = y + dy[k]
-            tmp_cost = cost + 100 if dir == k else cost + 600   # 좌||상이면 100
-            if 0 <= nx < N and 0 <= ny < N:     # 범위 체크
-                if board[nx][ny] == 0 and tmp_cost <= costs[nx][ny]:    # 벽이 아닌지, 최소 값이 맞는지
-                    costs[nx][ny] = tmp_cost        # 비용 설정
-                    deq.append((nx, ny, tmp_cost, k))   # append
+        x, y, price, dir = deq.popleft()    # popleft다, 주의하자
 
-    answer = costs[end[0]][end[1]]
+        for i in range(4):      # 방향 비교, 범위 0~3
+            nx = x+dx[i]
+            ny = y+dy[i]
+            tmp_price = price + 100 if i == dir else price + 600
+
+            if 0 <= nx < N and 0 <= ny < N:
+                if tmp_price < cost[i][nx][ny] and board[nx][ny] == 0:
+                    deq.append([nx, ny, tmp_price, i])
+                    cost[i][nx][ny] = tmp_price
+
+    for z in range(4):
+        if answer > cost[z][N-1][N-1]:
+            answer = cost[z][N-1][N-1]
+
 
     return answer
 
