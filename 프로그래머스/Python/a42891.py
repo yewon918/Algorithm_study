@@ -1,23 +1,27 @@
+'''
+6:17
+'''
 import heapq
 def solution(food_times, k):
     answer = 0
-
-    if sum(food_times)<=k:
-        return -1
     q = []
 
     for i in range(len(food_times)):
-        heapq.heappush(q,(food_times[i],i+1))
+        heapq.heappush(q,(food_times[i], i+1)) # 음식이랑 순서 같이
 
-    total_time=0  #전체 걸린 시간
-    prev=0
-    length=len(food_times)
+    prev = 0
+    now = 0
+    total = 0
+    flen = len(food_times)
 
-    while total_time+(q[0][0]-prev)*length<=k:   #음식 다먹는데 걸리는 시간이 k이하일때
+    while total+(q[0][0]-prev)*flen <= k:
         now = heapq.heappop(q)[0]
-        total_time += (now-prev)*length
-        length -= 1
+        total += (now-prev)*flen
         prev = now
-    res=sorted(q,key=lambda x:x[1])  #번호순으로 정렬
+        flen -= 1
+    result = sorted(q, key = lambda x:x[1])
+    answer = result[(k-total)%flen][1]
 
-    return res[(k-total_time)%length][1]
+    return answer
+
+print(solution([4,2,3,6,7,1,5,8], 16))
