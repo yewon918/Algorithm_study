@@ -1,6 +1,5 @@
-hey = {
-    'a': 'b',
-    'c': 'd'
-}
+a = ['a']
+a += 'b'
+b=['bb']
 
-print(hey[1].get())
+print(a+b)
