@@ -1,5 +1,2 @@
-a = ['a']
-a += 'b'
-b=['bb']
-
-print(a+b)
+for i in range(0,2):
+    print(i)
