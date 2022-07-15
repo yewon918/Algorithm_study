@@ -51,14 +51,14 @@ def solution(rows, columns, queries):
             map[x1-1][y1-1+k] = deq[k]
             c+=1
 
-        for a in range(0, x2-x1):  # 3칸만
-            map[x1-1+a][y2-1] = deq[c+a]
+        for a in range(c, c+x2-x1):  # 3칸만
+            map[x1-1+a][y2-1] = deq[a-1]    # c+a라고 해버리니까 3, 5, 7 이렇게 감..
             c+=1
-
+            print('x축', x1-1+a, 'y축', y2-1)
         for k in range(0, y2-y1):  # 2칸만
             map[x2-1][y2-1-k] = deq[c+k]
             c+=1
-
+        print(map)
         for a in range(0, x2-x1):   # 3칸
             map[x2-1-a][y1-1] = deq[c+a]
             c+=1
